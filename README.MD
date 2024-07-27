@@ -36,10 +36,12 @@ php artisan vendor:publish --provider="Xsotechs\SmartPaymentRouting\SmartPayment
 To use the smart payment routing in your Laravel application:
 
 ```php
-use Xsotechs\SmartPaymentRouting\Facades\SmartPaymentRouting;
+use Xsotechs\SmartPaymentRouting\Services\SmartRouterService;
+
 
 public function processPayment(Request $request)
 {
+    $smartRouterService = new SmartRouterService();
     $paymentData = [
         'amount' => $request->amount,
         'currency' => $request->currency,
@@ -48,7 +50,7 @@ public function processPayment(Request $request)
     ];
 
     try {
-        $processor = SmartPaymentRouting::route($paymentData);
+        $processor = $smartRouterService->route($paymentData);
         $data = $processor->process($paymentData);
         // Use the data to initiate a payment logic
     } catch (\Exception $e) {
