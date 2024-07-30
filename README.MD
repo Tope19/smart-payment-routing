@@ -23,13 +23,27 @@ The Smart Routing Package for Laravel provides an intelligent routing system for
 You can install the package via composer:
 
 ```bash
-composer require xsotechs/smart-payment-routing
+composer require xsotechs/smart-payment-routing:dev-main
+```
+
+You can adjust your project's minimum-stability to allow less stable versions. Add the following to your composer.json file:
+
+```bash
+{
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
 ```
 
 After installation, publish the configuration file:
 
 ```bash
 php artisan vendor:publish --provider="Xsotechs\SmartPaymentRouting\SmartPaymentRoutingServiceProvider" --tag="config"
+```
+
+Run your migration command:
+```bash
+php artisan migrate
 ```
 
 ## Usage
@@ -72,7 +86,7 @@ $newProcessor = $processorService->create([
     'name' => 'paystack',
     'is_active' => true,
     'transaction_cost' => 0.029,
-    'reliability_score' => 0.99, 
+    'reliability_score' => 99.0, 
     'supported_currencies' => ['NGN', 'USD'], // Supported currencies
     'supported_countries' => ['NG', 'US'], // Supported countries
     'config' => ['api_key' => 'your_stripe_api_key'],
@@ -82,7 +96,7 @@ $newProcessor = $processorService->create([
 $processor = PaymentProcessor::find(1);
 $processorService->update($processor, [
     'transaction_cost' => 0.028,
-    'reliability_score' => 0.995,
+    'reliability_score' => 95.0,
 ]);
 
 // Delete a processor

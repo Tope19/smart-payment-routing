@@ -34,8 +34,8 @@ class SmartRouterService implements SmartRouterInterface
     {
         \Log::info("Searching for currency: $currency, country: $country");
         return PaymentProcessor::where('is_active', true)
-            // ->whereJsonContains('supported_currencies', $currency)
-            // ->whereJsonContains('supported_countries', $country)
+            ->orWhereRaw('JSON_CONTAINS(supported_currencies, ?)', [json_encode($currency)])
+            ->orWhereRaw('JSON_CONTAINS(supported_countries, ?)', [json_encode($country)])
             ->get();
 
     }

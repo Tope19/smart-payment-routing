@@ -37,7 +37,7 @@ class SmartRouterServiceTest extends TestCase
         $flutterwave = PaymentProcessor::create([
             'name' => 'flutterwave',
             'is_active' => true,
-            'transaction_cost' => 2.0,
+            'transaction_cost' => 2.0,//percentage
             'reliability_score' => 95.0,
             'supported_currencies' => json_encode(['NGN']),
             'supported_countries' => json_encode(['NG']),
