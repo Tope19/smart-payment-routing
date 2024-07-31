@@ -34,8 +34,10 @@ class SmartRouterService implements SmartRouterInterface
     {
         \Log::info("Searching for currency: $currency, country: $country");
         return PaymentProcessor::where('is_active', true)
-            ->orWhereRaw('JSON_CONTAINS(supported_currencies, ?)', [json_encode($currency)])
-            ->orWhereRaw('JSON_CONTAINS(supported_countries, ?)', [json_encode($country)])
+            ->where(function ($query) use ($currency, $country) {
+                $query->whereRaw('JSON_CONTAINS(supported_currencies, ?)', [json_encode($currency)])
+                    ->orWhereRaw('JSON_CONTAINS(supported_countries, ?)', [json_encode($country)]);
+            })
             ->get();
 
     }
@@ -44,8 +46,11 @@ class SmartRouterService implements SmartRouterInterface
     {
         return $processors->sortBy(function ($processor) use ($amount) {
             $cost = $processor->transaction_cost * $amount;
-            $reliabilityFactor = 1 / (1 - $processor->reliability_score / 100); // Ensure reliability score is used correctly
-            return $cost * $reliabilityFactor;
+            // Normalize the reliability score to be between 0 and 1
+            $normalizedReliability = $processor->reliability_score / 100;
+            // Calculate a weighted score that factors in both cost and reliability
+            $weightedScore = $cost * (1 - $normalizedReliability);
+            return $weightedScore;
         })->first();
     }
 }
