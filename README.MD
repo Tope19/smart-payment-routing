@@ -64,8 +64,7 @@ public function processPayment(Request $request)
     ];
 
     try {
-        $processor = $smartRouterService->route($paymentData);
-        $data = $processor->process($paymentData);
+        $data = $smartRouterService->route($paymentData);
         // Use the data to initiate a payment logic
     } catch (\Exception $e) {
         return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
